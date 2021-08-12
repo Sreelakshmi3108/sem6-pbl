@@ -1,1 +1,205 @@
 
+
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style>
+
+        *{padding:0;margin:0;}
+
+body{
+	font-family:Verdana, Geneva, sans-serif;
+	background-color:#CCC;
+	font-size:12px;
+}
+
+.label-container{
+	position:fixed;
+	bottom:48px;
+	right:105px;
+	display:table;
+	visibility: hidden;
+}
+
+.label-text{
+	color:#FFF;
+	background:rgba(51,51,51,0.5);
+	display:table-cell;
+	vertical-align:middle;
+	padding:10px;
+	border-radius:3px;
+}
+
+.label-arrow{
+	display:table-cell;
+	vertical-align:middle;
+	color:#333;
+	opacity:0.5;
+}
+
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#06C;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+	font-size:24px;
+	margin-top:18px;
+}
+
+a.float + div.label-container {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s ease;
+}
+
+a.float:hover + div.label-container{
+  visibility: visible;
+  opacity: 1;
+}
+
+
+</style>
+    <title></title>
+</head>
+<body>
+<header class="site-header">
+  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <div class="container">
+      <a class="navbar-brand mr-4" href="/">SOCIAL MEDIA</a>
+
+        <div class="navbar-nav mr-auto">
+          <a class="nav-item nav-link" href="{{ url_for('home')}}">Home</a>
+          
+        </div>
+        <!-- Navbar Right Side -->
+        <div class="navbar-nav">
+          {% if current_user.is_authenticated %}
+            <a href="{{ url_for('new_post')}}" class="float">
+<i class="fa fa-plus-square  my-float"></i>
+</a>
+<div class="label-container">
+<div class="label-text">Add a post</div>
+<i class="fa fa-play label-arrow"></i>
+</div>
+            <a class="nav-item nav-link" href="{{ url_for('logout')}}">Logout</a>
+          {% else %}
+            <a class="nav-item nav-link" href="{{ url_for('login')}}">Login</a>
+            <a class="nav-item nav-link" href="{{ url_for('register')}}">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="container">
+	<div class="content-section">
+  <div class="media">
+    <img class="rounded-circle account-img" src="{{ image_file }}">
+    <div class="media-body">
+      <h2 class="account-heading">{{ current_user.username }}</h2>
+      <p class="text-secondary">{{ current_user.email }}</p>
+    </div>
+  </div>
+  
+  <form method="POST" action="" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      <legend class="border-bottom mb-4">Account Info</legend>
+      <div class="form-group">
+        {{ form.username.label(class="form-control-label")}}
+        {% if form.username.errors %}
+          {{ form.username(class="form-control form-control-lg is-invalid")}}
+          <div class="invalid-feedback">
+            {% for error in form.username.errors %}
+              <span> {{ error }} </span>
+            {% endfor %}
+          </div>
+          {% else %}
+            {{ form.username(class="form-control form-control-lg") }}
+          {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{ form.email.label(class="form-control-label")}}
+        {% if form.email.errors %}
+          {{ form.email(class="form-control form-control-lg is-invalid")}}
+          <div class="invalid-feedback">
+            {% for error in form.email.errors %}
+              <span> {{ error }} </span>
+            {% endfor %}
+          </div>
+          {% else %}
+            {{ form.email(class="form-control form-control-lg") }}
+          {% endif %}
+      </div>
+      <div class="form-group">
+        {{ form.picture.label()}}
+        {{ form.picture(class="form-control-file") }}
+        {% if form.picture.errors %}
+          {% for error in form.picture.errors %}
+              <span class="text-danger"> {{ error }} </span></br>
+          {% endfor %}
+        {% endif %}
+      </div>
+      
+</div>
+
+      
+    </fieldset>
+    <div class="form-group">
+      {{ form.submit(class="btn btn-outline-info")}}
+    </div>
+  </form>
+</div>
+</div>
+<hr>
+<h1 align="center"><i>Posts</i></h1>
+<hr>
+<hr>
+      {% for post in posts %}
+    <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+    <div class="media-body">
+    <div class="article-metadata">
+    
+    <a class="mr-2" href="{{url_for('user', user_id=post.user_id)}}"> {{post.author.username}} </a>
+
+    <small class="text-muted">{{post.date_posted.strftime('%Y-%m-%d')}}</small></div>
+    <h2><a class="article-title" href="{{ url_for('post', post_id=post.id)}}">{{post.title}}</a></h2>
+    
+
+    
+    <img class="imp" src="{{ url_for('static', filename='post_pics/' + post.pic) }}">
+    
+  <p class="article-content">{{post.content}}</p>
+    </div>
+  </article>
+  {% endfor %}
+
+
+</body>
+</html>
+
+
+	
