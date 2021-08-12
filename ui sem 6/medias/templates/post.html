@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css')}}">
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <title></title>
+</head>
+<body>
+<header class="site-header">
+  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <div class="container">
+      <a class="navbar-brand mr-4" href="#">SOCIAL MEDIA</a>
+
+        <div class="navbar-nav mr-auto">
+          <a class="nav-item nav-link" href="{{ url_for('home')}}">Home</a>
+          
+        </div>
+        <!-- Navbar Right Side -->
+        <div class="navbar-nav">
+          {% if current_user.is_authenticated %}
+            <a class="nav-item nav-link" href="{{ url_for('account')}}">Profile</a>
+            <a class="nav-item nav-link" href="{{ url_for('logout')}}">Logout</a>
+          {% else %}
+            <a class="nav-item nav-link" href="{{ url_for('login')}}">Login</a>
+            <a class="nav-item nav-link" href="{{ url_for('register')}}">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<body class="container">
+		{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for category, message in messages %}
+				<div class="alert alert-{{ category }}">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endif %}
+		{% endwith %}
+
+	
+
+    <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+    <div class="media-body">
+    <div class="article-metadata">
+    
+   <a class="mr-2" href="{{url_for('user', user_id=post.user_id)}}"> {{post.author.username}} </a>
+
+    <small class="text-muted">{{post.date_posted.strftime('%Y-%m-%d')}}</small></div>
+    
+		<h2 class="article-title">{{post.title}}</h2>
+		
+
+    
+    <img  src="{{ url_for('static', filename='post_pics/' + post.pic) }}">
+    
+   <p class="article-content">{{post.content}}</p>
+
+    </div>
+        </article>
+<hr>
+        <h3 align="center">Comments</h3>
+        <hr><hr>
+
+{% for comment1 in comments %}
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + comment1.names.image_file) }}">
+        <p><b>{{ comment1.names.username }}</b></p>
+   <p>{{comment1.comments}}</p><hr>
+{% endfor %}
+        {% if current_user.is_authenticated %}
+        <form method="POST" action="">
+<div class="form-group">
+    {{ form.comment(class="form-control form-control-lg",placeholder="Write a comment") }}
+</div>
+<div class="form-group">
+      {{ form.submit(class="btn btn-outline-info") }}
+    </div>
+        </form>
+  <!-- Modal -->
+{% else %}
+<p>Login to comment</p>
+{% endif %}
+</body>
+</html>
+
+
+
+	
