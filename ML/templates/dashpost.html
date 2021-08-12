@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+<!--
+<form action="/" method= "POST">
+    <input type="text" name="username" placeholder="Enter Username">
+    <input type ="submit" name = "submit">
+
+
+</form>
+-->
+<!-- <img src="{{url_for('static',filename='img/graph.jpg')}}"> -->
+<table class="table table-striped">
+
+
+                <tr>
+              <th>ID</th>
+              <th>CONTENT</th>
+              <th>USER ID</th>
+              
+              <th>Action</th>
+
+
+          </tr>
+
+
+
+
+
+                {% for row in data %}
+                <tr>
+                    <td>{{row.0}}</td>
+                    
+                    <td>{{row.3}}</td>
+                    <td>{{row.5}}</td>
+                    <td>
+
+
+               
+                <a href="/deletepost/{{ row.0 }}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+</table>
+<!-- <table border="1">
+    <tr>
+
+    <th>Username</th>
+    
+        <th>Sentiments</th>
+    </tr>
+{%for i in data%}
+
+
+
+
+    <tr>
+        <td>{{i[1]}}</td>
+        
+        <td>{{i[5]}}</td>
+    </tr>
+
+
+
+
+
+{% endfor %}
+</table> -->
+
+<!--
+<img src="{{url_for('static',filename='img/graph.jpg')}}">
+-->
+<script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+
+<script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+
+</body>
+</html>
+
